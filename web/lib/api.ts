@@ -31,8 +31,21 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   return data as T;
 }
 
-/** The browser's location as a promise. */
+/** A spot in Bokaro where demo.sh creates its sample shops. */
+export const DEMO_SPOT = { latitude: 23.6695, longitude: 86.1513 } as const;
+const DEMO_KEY = "cornershop_demo_area";
+
+export function setDemoArea(on: boolean): void {
+  if (on) window.sessionStorage.setItem(DEMO_KEY, "1");
+  else window.sessionStorage.removeItem(DEMO_KEY);
+}
+export function inDemoArea(): boolean {
+  return typeof window !== "undefined" && window.sessionStorage.getItem(DEMO_KEY) === "1";
+}
+
+/** The browser's location, or the demo spot when the visitor chose to try the demo area. */
 export function currentPosition(): Promise<{ latitude: number; longitude: number }> {
+  if (inDemoArea()) return Promise.resolve(DEMO_SPOT);
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) return reject(new Error("This browser cannot share its location."));
     navigator.geolocation.getCurrentPosition(

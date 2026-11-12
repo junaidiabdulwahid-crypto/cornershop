@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { apiRequest, currentPosition, type NearbyShop } from "../lib/api";
+import { apiRequest, currentPosition, setDemoArea, type NearbyShop } from "../lib/api";
 
 /** Home: find shops near the visitor. */
 export default function HomePage() {
@@ -10,7 +10,8 @@ export default function HomePage() {
   const [status, setStatus] = useState("Tap the button to find shops near you.");
   const [loading, setLoading] = useState(false);
 
-  async function findNearby() {
+  async function findNearby(demo: boolean) {
+    setDemoArea(demo); // demo = stand at the sample shops in Bokaro
     setLoading(true);
     try {
       const { latitude, longitude } = await currentPosition();
@@ -28,9 +29,14 @@ export default function HomePage() {
     <main>
       <h1>Offers around the corner</h1>
       <p className="muted">Discounts from cafes, salons and stores near you, redeemed right at the counter.</p>
-      <button type="button" onClick={findNearby} disabled={loading}>
-        {loading ? "Finding…" : "Find shops near me"}
-      </button>
+      <div className="row" style={{ justifyContent: "flex-start" }}>
+        <button type="button" onClick={() => findNearby(false)} disabled={loading}>
+          {loading ? "Finding…" : "Find shops near me"}
+        </button>
+        <button type="button" className="ghost" onClick={() => findNearby(true)} disabled={loading}>
+          Try the demo area
+        </button>
+      </div>
       <p>{status}</p>
       {shops.map((shop) => (
         <div key={shop.id} className="card">
