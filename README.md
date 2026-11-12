@@ -28,7 +28,7 @@ A full-stack app built with **NestJS + TypeScript**, **PostgreSQL + PostGIS** an
 ## Run it
 
 ```bash
-docker compose up -d                       # PostgreSQL + PostGIS on :5433, loads db/*.sql on first start
+docker compose up -d                       # PostgreSQL + PostGIS on :543300, loads db/*.sql on first start
 
 cd api
 cp ../.env.example .env                    # set JWT_SECRET (openssl rand -hex 32)
